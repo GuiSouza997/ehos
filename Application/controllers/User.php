@@ -1,7 +1,7 @@
 <?php
 
 use Application\core\Controller;
-
+use Application\models\Models\Users;
 class User extends Controller
 {
   /**
@@ -37,7 +37,7 @@ class User extends Controller
   {
     if (isset($email)) {
       $users = $this->model('Users');
-      $data = $users::findUsersByAuth('guilherme26497@gmail.com', 'senha123');
+      $data = $users::findUsersByAuth('guilherme26497@gmail.com',null);
       $this->view('user/login', ['user' => $data]);
     } else {
       $this->pageNotFound();
@@ -53,6 +53,22 @@ class User extends Controller
     } else {
       $this->pageNotFound();
     }
+  }
+
+  public function validate()
+  {
+
+      $users = $this->model('Users');
+      $email = !empty(strtolower($_POST['email'])) ? strtolower($_POST['email']) : null;
+      $password = !empty(strtolower($_POST['password'])) ? strtolower($_POST['password']) : null;
+      if(!is_null($email) && !is_null($password)){
+        $data = $users::findUsersByAuth($email);
+        // print_r($data);
+      }
+      //$this->view('user/create', ['user' => $data]);
+    // } else {
+    //   $this->pageNotFound();
+    // }
   }
 
 }

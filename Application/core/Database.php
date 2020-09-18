@@ -13,7 +13,7 @@ class Database extends PDO
   private $DB_PORT = '';
 
   // armazena a conexão
-  private $conn;
+  public $conn;
 
   public function __construct()
   {

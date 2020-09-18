@@ -2,8 +2,9 @@
 <html lang="pt-br">
   <head>
     <meta charset="utf-8">
-    <title>Simple Framework</title>
+    <title>Emporio do Homem</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
 
@@ -16,7 +17,7 @@
     $app = new App();
 
   ?>
-  <script src="/assets/js/jquery.slim.min.js"></script>
+  <script src="/assets/js/jquery-3.1.1.min.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
   </body>
 </html>

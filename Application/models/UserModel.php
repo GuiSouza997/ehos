@@ -4,9 +4,13 @@ namespace Application\models;
 
 use Application\core\Database;
 use PDO;
-class Users
+class UserModel
 {
-
+  public int $id;
+  public string $email;
+  public string $senha;
+  public int $nivel;
+  public string $status;
   /**
   * Este método busca todos os usuários armazenados na base de dados
   *

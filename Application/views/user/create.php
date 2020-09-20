@@ -7,17 +7,17 @@
 			</div>
 		</div>
 		<div class="error-exibition mt-3"></div>
-		<form>
+		<form action="/user/create" method="POST">
 			<div class="form-group">
 				<div class="row">
 					<div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 mt-3">
-						<input type="text" class="form-control" id="nome" placeholder="Nome" required>
+						<input type="text" class="form-control"name="nome" id="nome" placeholder="Nome" required>
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="text" class="form-control" id="sobrenome" placeholder="Sobrenome">
+						<input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
 					</div>
 					<div class="col-sm-12 col-md-5 col-lg-5 col-xl-5 mt-3">
-						<select class="form-control" id="tipos_pessoas" required>
+						<select class="form-control" id="tipos_pessoas" name="tipos_pessoas" required>
 							<option value="#">Selecione o tipo de pessoa</option>
 							<option value="pf">Pessoa Física</option>
 							<option value="pj">Pessoa Jurídica</option>
@@ -26,43 +26,43 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
-						<input type="email" class="form-control" id="email" placeholder="Email">
+						<input type="email" class="form-control" name="email" id="email" placeholder="Email">
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="password" class="form-control" id="senha" placeholder="Senha" required>
+						<input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<select class="form-control" id="estado" required>
+						<select class="form-control" id="estado" name="estado" required>
 							<option value="#">Selecione seu estado</option>
 							<!-- <option value="">2</option> -->
 						</select>
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<select class="form-control" id="cidade" required>
+						<select class="form-control" id="cidade" name="cidade" required>
 							<option value="#">Selecione sua cidade</option>
 							<!-- <option value="">2</option> -->
 						</select>
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="password" class="form-control" id="confirmarSenha" placeholder="Confirmar sua senha" required>
+						<input type="password" class="form-control" name="confirmarSenha" id="confirmarSenha" placeholder="Confirmar sua senha" required>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="text" class="form-control" id="cep" placeholder="CEP" required>
+						<input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" required>
 					</div>
 					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
-						<input type="text" class="form-control" id="bairro" placeholder="Bairro" required>
+						<input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" required>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
-						<input type="text" class="form-control" id="rua" placeholder="Rua / Avenida" required>
+						<input type="text" class="form-control" name="rua" id="rua" placeholder="Rua / Avenida" required>
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="text" class="form-control" id="numero_casa" placeholder="Número / Apartamento">
+						<input type="text" class="form-control" name="numero_casa" id="numero_casa" placeholder="Número / Apartamento">
 					</div>
 				</div>
 				<div class="row">
@@ -236,14 +236,44 @@
 					for(var i = 0; i < message_error.length; i++){
 						$('.error-exibition').html(message_error[i]);
 					}
-				}else{
-						$('.error-exibition').html();
 				}
 			}else{
-				$('.error-exibition').html();
-			}
-			
+				$('#btn-salvar').attr('type', 'submit');
+				$('#btn-salvar').submit();
+				// var val_nome = $('#nome').val();
+				// var val_sobrenome = $('#sobrenome').val();
+				// var val_tipo_pessoa = $('#tipos_pessoas').val();
+				var val_email = $('#email').val();
+				var val_senha = $('#senha').val();
+				// var val_estado = $('#estado').val();
+				// var val_cidade = $('#cidade').val();
+				// var val_cep = $('#cep').val();
+				// var val_bairro = $('#bairro').val();
+				// var val_rua = $('#rua').val();
+				// var val_numero = $('#numero_casa').val();
 
+				$.ajax ({
+                    type: "POST",
+                    url: "/user/create",
+                    data: {
+				// 	nome: val_nome,
+				// 	sobrenome: val_sobrenome,
+				// 	tipo_pessoa: val_tipo_pessoa,
+					email: val_email,
+					senha: val_senha
+				// 	estado: val_estado,
+				// 	cidade: val_cidade,
+				// 	cep: val_cep,
+				// 	bairro: val_bairro,
+				// 	rua: val_rua,
+				// 	numero: val_numero
+					},
+                    cache: false,
+                    success: function(result) {
+						
+                 	}
+              	});
+			}
         //     //if(errors == false){
 
         //         // $('#btn-salvar').attr('disable', true);

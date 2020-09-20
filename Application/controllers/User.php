@@ -1,7 +1,7 @@
 <?php
 
 use Application\core\Controller;
-use Application\models\Models\Users;
+use Application\models\UsersModel;
 class User extends Controller
 {
   /**
@@ -10,7 +10,7 @@ class User extends Controller
   */
   public function index()
   {
-    $users = $this->model('Users'); // é retornado o model Users()
+    $users = $this->model('UsersModel'); // é retornado o model Users()
     $data = $users::findAll();
     $this->view('user/index', ['users' => $data]);
   }
@@ -25,7 +25,7 @@ class User extends Controller
   public function show($id = null)
   {
     if (is_numeric($id)) {
-      $users = $this->model('Users');
+      $users = $this->model('UsersModel');
       $data = $users::findById($id);
       $this->view('user/show', ['user' => $data]);
     } else {
@@ -36,7 +36,7 @@ class User extends Controller
   public function login($email='guilherme26497@gmail.com', $senha= null)
   {
     if (isset($email)) {
-      $users = $this->model('Users');
+      $users = $this->model('UsersModel');
       $data = $users::findUsersByAuth('guilherme26497@gmail.com',null);
       $this->view('user/login', ['user' => $data]);
     } else {
@@ -46,29 +46,37 @@ class User extends Controller
 
   public function create()
   {
-    if (true) {
-      $users = $this->model('Users');
-      $data = $users::findUsersByAuth('guilherme26497@gmail.com', null);
-      $this->view('user/create', ['user' => $data]);
+    if ($this->create_user()) {
+      
+      echo "<pre>"; 
+      print_r($this->create_user());
+      echo "</pre>";
+      die();
+      // $users = $this->model('Users');
+      // $data = $users::findUsersByAuth('guilherme26497@gmail.com', null);
+      $this->view('user/create', ['user' => 'dados']);
     } else {
       $this->pageNotFound();
     }
   }
 
-  public function validate()
+  public function create_user()
   {
-
-      $users = $this->model('Users');
-      $email = !empty(strtolower($_POST['email'])) ? strtolower($_POST['email']) : null;
-      $password = !empty(strtolower($_POST['password'])) ? strtolower($_POST['password']) : null;
-      if(!is_null($email) && !is_null($password)){
-        $data = $users::findUsersByAuth($email);
-        // print_r($data);
+      $users = $this->model('UsersModel');
+      if(isset($_POST)){
+        // $users = !empty(strtolower($_POST['email'])) ? strtolower($_POST['email']) : null;
+        // $users->senha = !empty(strtolower($_POST['password'])) ? strtolower($_POST['password']) : null;
+        // if(!is_null($users->email) && !is_null($users->senha)){
+        //   // $data = $users::findUsersByAuth($email);
+        //   $data = "Email: ".$users->email." Senha: ".$users->senha;
+        // }
+        $data = "EUU";
       }
       //$this->view('user/create', ['user' => $data]);
     // } else {
     //   $this->pageNotFound();
     // }
+    return $data;
   }
 
 }

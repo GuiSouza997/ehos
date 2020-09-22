@@ -17,7 +17,7 @@
 						<input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
 					</div>
 					<div class="col-sm-12 col-md-5 col-lg-5 col-xl-5 mt-3">
-						<select class="form-control" id="tipos_pessoas" name="tipos_pessoas" required>
+						<select class="form-control" id="tipos_pessoas" name="tipo_pessoa" required>
 							<option value="#">Selecione o tipo de pessoa</option>
 							<option value="pf">Pessoa Física</option>
 							<option value="pj">Pessoa Jurídica</option>
@@ -76,7 +76,13 @@
 </html>
 <script>
     window.onload = function (){
-
+		var requestURL = "../estado/searchEstadosFull/";
+		$.get(requestURL, function(data, status){
+			var json = JSON.parse(data);
+			console.log(json);
+		})
+		// $("#estado").html("<option value='"+estadosigla+"' selected>"+estadosigla+"</option>");
+		// $("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
         function validateEmail(email) 
         {
             var re = /\S+@\S+\.\S+/;
@@ -155,8 +161,8 @@
 					var url = "https://viacep.com.br/ws/"+ cep +"/json/";
 					$.getJSON(url).done(function(data){
 						var estadosigla = recuperarEstadoSigla(data.uf);
-						$("#estado").html("<option value='"+estadosigla+"' selected>"+estadosigla+"</option>");
-						$("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
+						// $("#estado").html("<option value='"+estadosigla+"' selected>"+estadosigla+"</option>");
+						// $("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
 						$("#bairro").val(data.bairro);
 						$("#rua").val(data.logradouro);
 						$("#cep").val(data.cep);
@@ -243,8 +249,8 @@
 				// var val_nome = $('#nome').val();
 				// var val_sobrenome = $('#sobrenome').val();
 				// var val_tipo_pessoa = $('#tipos_pessoas').val();
-				var val_email = $('#email').val();
-				var val_senha = $('#senha').val();
+				// var val_email = btoa($('#email').val());
+				// var val_senha = btoa($('#senha').val());
 				// var val_estado = $('#estado').val();
 				// var val_cidade = $('#cidade').val();
 				// var val_cep = $('#cep').val();
@@ -252,27 +258,27 @@
 				// var val_rua = $('#rua').val();
 				// var val_numero = $('#numero_casa').val();
 
-				$.ajax ({
-                    type: "POST",
-                    url: "/user/create",
-                    data: {
+				// $.ajax ({
+                //     type: "POST",
+                //     url: "/user/data_create",
+                //     data: {
 				// 	nome: val_nome,
 				// 	sobrenome: val_sobrenome,
 				// 	tipo_pessoa: val_tipo_pessoa,
-					email: val_email,
-					senha: val_senha
+				// 	email: val_email,
+				// 	senha: val_senha,
 				// 	estado: val_estado,
 				// 	cidade: val_cidade,
 				// 	cep: val_cep,
 				// 	bairro: val_bairro,
 				// 	rua: val_rua,
 				// 	numero: val_numero
-					},
-                    cache: false,
-                    success: function(result) {
+				// 	},
+                //     cache: false,
+                //     success: function(result) {
 						
-                 	}
-              	});
+                //  	}
+              	// });
 			}
         //     //if(errors == false){
 

@@ -4,7 +4,7 @@ namespace Application\models;
 
 use Application\core\Database;
 use PDO;
-class UserModel
+class UsersModel
 {
   public int $id;
   public string $email;
@@ -69,5 +69,35 @@ class UserModel
     //     return null;
     //   }
     // }
+  }
+
+  public function InsertUsers($email, $senha, $nivel, $status){
+    $conn = new Database();
+    $stmt = $conn->conn->prepare('INSERT INTO usuario (email, senha, nivel, status ) VALUES(:email, :senha, :nivel, :status)');
+    $result = $stmt->execute(array(
+      ':email' => $email,
+      ':senha' => $senha,
+      ':nivel' => $nivel,
+      ':status' => $status
+    ));
+    if($result){
+      $registered = true;
+    }else{
+      $registered = false;
+    }
+    return $registered;   
+  }
+
+  public function searchUserByEmail($email){
+    $user_id =  null;
+    $email_user = strtolower($email);
+    $conn = new Database();
+    $result = $conn->executeQuery('SELECT usuario_id FROM usuario WHERE email = :email LIMIT 1', array(
+      ':email' => $email_user
+    ));
+    foreach ( $result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+      $user_id = $row['usuario_id'];
+    }
+    return $user_id;
   }
 }

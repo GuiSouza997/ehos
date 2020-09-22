@@ -63,4 +63,10 @@ class Database extends PDO
     return $stmt;
   }
 
+  public function conection(){
+    $conection = null;
+    $conection = $this->conn;
+    return $conection;
+  }
+
 }

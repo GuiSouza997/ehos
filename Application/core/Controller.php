@@ -18,7 +18,7 @@ class Controller
   */
   public function model($model)
   {
-    require '../Application/models/' . $model . '.php';
+    require_once '../Application/models/' . $model . '.php';
     $classe = 'Application\\models\\' . $model;
     return new $classe();
 

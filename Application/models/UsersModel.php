@@ -19,8 +19,9 @@ class UsersModel
   public static function findAll()
   {
     $conn = new Database();
-    $result = $conn->executeQuery('SELECT * FROM usuarios');
-    return $result->fetchAll(PDO::FETCH_ASSOC);
+    $result = $conn->executeQuery('SELECT * FROM usuario');
+    $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+    return $rows;
   }
 
   /**
@@ -33,7 +34,7 @@ class UsersModel
   public static function findById(int $id)
   {
     $conn = new Database();
-    $result = $conn->executeQuery('SELECT * FROM usuarios WHERE id = :ID LIMIT 1', array(
+    $result = $conn->executeQuery('SELECT * FROM usuario WHERE id = :ID LIMIT 1', array(
       ':ID' => $id
     ));
 

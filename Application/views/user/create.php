@@ -1,4 +1,5 @@
 <?php //include_once '../Application/views/templates/header.php' ?>
+
 <body>
 	<div class="container">
 		<div class="row">
@@ -7,6 +8,9 @@
 			</div>
 		</div>
 		<div class="error-exibition mt-3"></div>
+		<div class="mt-3">
+			<p class='message_success text-center'> <?php echo $data ;?></p>
+		</div>
 		<form action="/user/create" method="POST">
 			<div class="form-group">
 				<div class="row">
@@ -25,14 +29,20 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
+					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
 						<input type="email" class="form-control" name="email" id="email" placeholder="Email">
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
 						<input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
 					</div>
+					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
+						<input type="password" class="form-control" name="confirmarSenha" id="confirmarSenha" placeholder="Confirmar sua senha" required>
+					</div>
 				</div>
 				<div class="row">
+					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
+						<input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" required>
+					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
 						<select class="form-control" id="estado" name="estado" required>
 							<option value="#">Selecione seu estado</option>
@@ -45,20 +55,12 @@
 							<!-- <option value="">2</option> -->
 						</select>
 					</div>
-					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="password" class="form-control" name="confirmarSenha" id="confirmarSenha" placeholder="Confirmar sua senha" required>
-					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
-						<input type="text" class="form-control" name="cep" id="cep" placeholder="CEP" required>
-					</div>
-					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
 						<input type="text" class="form-control" name="bairro" id="bairro" placeholder="Bairro" required>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12 col-md-8 col-lg-8 col-xl-8 mt-3">
+					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
 						<input type="text" class="form-control" name="rua" id="rua" placeholder="Rua / Avenida" required>
 					</div>
 					<div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mt-3">
@@ -70,17 +72,32 @@
 				</div>
 			</div>
 		</form>
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Cadastro de usuário</h3>
+			</div>
+			<div class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
 	</div>
 	<?php //include_once "../Application/views/templates/jquery_bootstrap.php"; ?>
 </body>
 </html>
 <script>
     window.onload = function (){
-		var requestURL = "../estado/searchEstadosFull/";
-		$.get(requestURL, function(data, status){
-			var json = JSON.parse(data);
-			console.log(json);
-		})
+		<?php if(isset($data) || !empty($data)){ ?>
+			$('.message_success').attr('class', 'alert alert-success');
+		<?php } ?>
+		// var requestURL = "../estado/searchEstadosFull/";
+		// $.get(requestURL, function(data, status){
+		// 	var json = JSON.parse(data);
+		// 	console.log(json);
+		// })
 		// $("#estado").html("<option value='"+estadosigla+"' selected>"+estadosigla+"</option>");
 		// $("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
         function validateEmail(email) 
@@ -161,8 +178,8 @@
 					var url = "https://viacep.com.br/ws/"+ cep +"/json/";
 					$.getJSON(url).done(function(data){
 						var estadosigla = recuperarEstadoSigla(data.uf);
-						// $("#estado").html("<option value='"+estadosigla+"' selected>"+estadosigla+"</option>");
-						// $("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
+						$("#estado").html("<option value='"+data.uf+"' selected>"+estadosigla+"</option>");
+						$("#cidade").html("<option value='"+data.localidade+"' selected>"+data.localidade+"</option>");
 						$("#bairro").val(data.bairro);
 						$("#rua").val(data.logradouro);
 						$("#cep").val(data.cep);

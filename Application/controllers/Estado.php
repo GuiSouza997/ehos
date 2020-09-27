@@ -40,7 +40,6 @@ class Estado extends Controller
     $user_id = null;
     $estado_exec = $this->model('EstadoModel');
     $estados = $estado_exec->findAll(); 
-    print_r($estados);
     return $estados;
   }
 

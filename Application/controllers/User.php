@@ -2,6 +2,7 @@
 
 use Application\core\Controller;
 use Application\models\UsersModel;
+use Application\models\PessoaModel;
 use Application\models\TipoPessoaModel;
 use Application\models\EnderecoModel;
 use Application\models\EstadoModel;
@@ -15,8 +16,8 @@ class User extends Controller
   public function index()
   {
     $users = $this->model('UsersModel'); // é retornado o model Users()
-    $data = $users::findAll();
-    $this->view('user/index', ['users' => $data]);
+    $data = $users->findAll();
+    $this->view('user/index', ['user' => $data]);
   }
 
   /**
@@ -28,7 +29,8 @@ class User extends Controller
   */
   public function show($id = null)
   {
-    if (is_numeric($id)) {
+    //if (is_numeric($id)) {
+      if(true){
       $users = $this->model('UsersModel');
       $data = $users::findById($id);
       $this->view('user/show', ['user' => $data]);
@@ -50,15 +52,9 @@ class User extends Controller
 
   public function create()
   {
-    $eu = true;
-    if (isset($eu)) {
-      
-      echo "<pre>"; 
-      print_r($this->data_create());
-      echo "</pre>";
-      // $users = $this->model('Users');
-      // $data = $users::findUsersByAuth('guilherme26497@gmail.com', null);
-      $this->view('user/create', ['user' => 'dados']);
+    if (true) {
+      $data = $this->data_create();
+      $this->view('user/create', $data);
     } else {
       $this->pageNotFound();
     }
@@ -67,59 +63,80 @@ class User extends Controller
   public function data_create()
   {
       $data = null;
+      $res  = null;
       $user_id = null;
+    if(isset($_POST) && !empty($_POST)){
       $users = $this->model('UsersModel');
+      $pessoa_user = $this->model('PessoaModel');
       $tipopessoa_user = $this->model('TipoPessoaModel');
       $endereco_user = $this->model('EnderecoModel');
       $estado_user = $this->model('EstadoModel');
       $cidade_user = $this->model('CidadeModel');
       $user = new UsersModel;
+      $pessoa = new PessoaModel;
       $tipo_pessoa = new TipoPessoaModel;
       $endereco = new EnderecoModel;
-      $endereco = new EstadoModel;
-      $endereco = new CidadeModel;
+      $estado = new EstadoModel;
+      $cidade = new CidadeModel;
       if(isset($_POST) && !empty($_POST)){
-          $user->email = isset($_POST['email']) ? $_POST['email'] : '';
-          $user->senha = isset($_POST['senha']) ? md5($_POST['senha']) : '';
-          $user->nivel = 50;
-          $user->status = 'A';
+        $user->email = isset($_POST['email']) ? $_POST['email'] : '';
+        $user->senha = isset($_POST['senha']) ? md5($_POST['senha']) : '';
+        $user->nivel = 50;
+        $user->status = 'A';
+        if((isset($_POST['tipo_pessoa']) && !empty($_POST['tipo_pessoa'])) && (isset($_POST['estado']) && !empty($_POST['estado'])) && (isset($_POST['cidade']) && !is_null($_POST['cidade']))){
           $tipo_pessoa->id = $tipopessoa_user->findByTypePessoa($_POST['tipo_pessoa']); // TIPO PESSOA SELECIONADO 
-          // $user_inserted = $users->InsertUsers($user->email, $user->senha, $user->nivel, $user->status) ? true : false;
-          // if($user_inserted){
-          //   $res = "Usuario inserido com sucesso";
-          // $user_id = $users->searchUserByEmail($user->email);
-            // findByTypePessoa($_POST['tipos_pessoa']);
-          // }else{
-          //   $res = "Não foi possível inserir o usuário :(";
-          // }
-        
-
-
-    // [sobrenome] => DE SOUZA
-    // [tipos_pessoas] => pf
-    // [email] => guilherme26497@gmail.com
-    // [senha] => 123
-    // [estado] => São Paulo
-    // [cidade] => Bebedouro
-    // [confirmarSenha] => 123
-    // [cep] => 14709-192
-    // [bairro] => Residencial Doutor Pedro Paschoal
-    // [rua] => Rua Júlio César Staconi
-    // [numero_casa]
-
+          $cidade_estado = $cidade_user->findByCidadeFromSiglaEstado($_POST['estado'], $_POST['cidade']);
+          $estado->id = $cidade_estado['estado_id'];
+          $cidade->id = $cidade_estado['cidade_id'];
+        }
+        $endereco->bairro = isset($_POST['bairro']) ? $_POST['bairro'] : null;
+        $endereco->rua = isset($_POST['rua']) ? $_POST['rua'] : null;
+        $endereco->numero = isset($_POST['numero_casa']) ? $_POST['numero_casa'] : null;
+        if((isset($endereco->bairro) && !is_null($endereco->bairro)) && (isset($endereco->rua) && !is_null($endereco->rua)) && (isset($endereco->numero) && !is_null($endereco->numero))){
+          $endereco_inserted = $endereco_user->InsertEndereco($estado->id, $cidade->id, $endereco->bairro, $endereco->rua, $endereco->numero ) ? true : false;        
+        }
+        $user_inserted = $users->InsertUsers($user->email, $user->senha, $user->nivel, $user->status) ? true : false;
+        if($user_inserted && $endereco_inserted && (isset($tipo_pessoa->id) && !empty($tipo_pessoa->id))){
+          $user_id = $users->searchUserByEmail($user->email);
+          $user->id = $user_id;
+          $endereco_data = null;
+          $endereco_data = $endereco_user->findByLastEnderecoCreated();
+          $endereco->id = $endereco_data[0]['endereco_id'];
+          //$endereco->id = $endereco_id;
+          if((isset($user->id) && !empty($user->id)) && (isset($endereco->id) && !empty($endereco->id)) && (isset($tipo_pessoa->id) && !empty($tipo_pessoa->id))){
+              $pessoa->nome = $_POST['nome'];
+              $pessoa->sobrenome = $_POST['sobrenome'];
+              $pessoa_inserted = $pessoa_user->InsertPessoa($pessoa->nome, $pessoa->sobrenome, $tipo_pessoa->id, $endereco->id, $user->id) ? true : false;
+              if($pessoa_inserted){
+                $res = "Usuário cadastrado com sucesso";
+              }else{
+                $res = "Não foi possível cadastrar o usuário :(";
+              }
+          }
+        }else{
+          $res = "Não foi possível cadastrar o usuário :(";
+        }
         // $users = !empty(strtolower($_POST['email'])) ? strtolower($_POST['email']) : null;
         // $users->senha = !empty(strtolower($_POST['password'])) ? strtolower($_POST['password']) : null;
         // if(!is_null($users->email) && !is_null($users->senha)){
         //   // $data = $users::findUsersByAuth($email);
         //   $data = "Email: ".$users->email." Senha: ".$users->senha;
         // }
-        $data = $tipo_pessoa->id;
+      $data = $res;
       }
-      //$this->view('user/create', ['user' => $data]);
-    // } else {
-    //   $this->pageNotFound();
-    // }
-    return $data;
+      return $data;
+    }
   }
 
+  public function painel($user_id, $level){
+
+    if (true) {
+      // $users = $this->model('UsersModel');
+      // $data = $users::findUsersByAuth('guilherme26497@gmail.com',null);
+      $data = 'Painel Administrativo!';
+      $this->view('painel/admin', ['user' => $data]);
+    } else {
+      $this->pageNotFound();
+    }
+  }
 }

@@ -29,17 +29,19 @@ class CidadeModel
   *
   * @return   int
   */
-  public static function findByCidadeFromSiglaEstado(string $type)
+  public static function findByCidadeFromSiglaEstado(string $sigla, string $nome_cidade)
   {
-    $tipo_pessoa_id = null;
+    $res = [];
     $conn = new Database();
-    $result = $conn->executeQuery('SELECT cidade_id FROM cidade WHERE sigla_estado = :type', array(
-      ':type' => strtoupper($type)
+    $result = $conn->executeQuery('SELECT ci.cidade_id, es.estado_id FROM cidade as ci JOIN estado as es ON (ci.sigla_estado = es.sigla) WHERE sigla_estado = :sigla and ci.nome = :cidade_nome', array(
+      ':sigla' => strtoupper($sigla),
+      ':cidade_nome' => $nome_cidade
     ));
     foreach ( $result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-      $estado_id = $row['cidade_id'];
+      $res['estado_id'] = $row['estado_id'];
+      $res['cidade_id'] = $row['cidade_id'];
     }
-    return $estado_id;
+    return $res;
   }
 
 }

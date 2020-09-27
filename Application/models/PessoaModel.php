@@ -41,4 +41,22 @@ class PessoaModel
     return $result->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function InsertPessoa($nome, $sobrenome, $tipo_pessoa_id, $endereco_id, $usuario_id ){
+    $conn = new Database();
+    $stmt = $conn->conn->prepare('INSERT INTO pessoa (nome, sobrenome, tipo_pessoa_id, endereco_id, usuario_id ) VALUES(:nome, :sobrenome, :tipo_pessoa_id, :endereco_id, :usuario_id )');
+    $result = $stmt->execute(array(
+      ':nome' => $nome,
+      ':sobrenome' => $sobrenome,
+      ':tipo_pessoa_id' => $tipo_pessoa_id,
+      ':endereco_id' => $endereco_id,
+      ':usuario_id' => $usuario_id,
+    ));
+    if($result){
+      $registered = true;
+    }else{
+      $registered = false;
+    }
+    return $registered;   
+  }
+
 }

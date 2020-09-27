@@ -41,4 +41,29 @@ class EnderecoModel
 
     return $result->fetchAll(PDO::FETCH_ASSOC);
   }
+  public function InsertEndereco($estado_id, $cidade_id, $bairro, $rua, $numero = null){
+    $conn = new Database();
+    $stmt = $conn->conn->prepare('INSERT INTO endereco (estado_id, cidade_id, bairro, rua, numero ) VALUES(:estado_id, :cidade_id, :bairro, :rua, :numero)');
+    $result = $stmt->execute(array(
+      ':estado_id' => $estado_id,
+      ':cidade_id' => $cidade_id,
+      ':bairro' => $bairro,
+      ':rua' => $rua,
+      ':numero' => is_null($numero) ? '': $numero,
+    ));
+    if($result){
+      $registered = true;
+    }else{
+      $registered = false;
+    }
+    return $registered;   
+  }
+
+  public static function findByLastEnderecoCreated()
+  {
+    $conn = new Database();
+    $result = $conn->executeQuery('SELECT endereco_id FROM endereco ORDER BY endereco_id DESC LIMIT 1');
+
+    return $result->fetchAll(PDO::FETCH_ASSOC);
+  }
 }
